@@ -1,0 +1,12 @@
+{
+  "name": "cosens-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "build": "node scripts/build-demo-data.mjs && npm run build --workspace @cosens/demo && node scripts/copy-public.mjs"
+  },
+  "workspaces": [
+    "apps/demo"
+  ]
+}

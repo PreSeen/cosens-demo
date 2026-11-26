@@ -1,0 +1,122 @@
+/* Semantic aliases shared by the legacy static pages and the React application.
+   Palette primitives and the no-JS dark fallback are in the generated first-paint block. */
+:root{
+  --bg:var(--palette-bg);--surface:var(--palette-surface);--ink:var(--palette-ink);--muted:var(--palette-muted);--line:var(--palette-line);--soft:var(--palette-soft);--inverse:var(--palette-bg);
+  --code:var(--palette-code-bg);--code-ink:var(--palette-code-ink);--shadow:color-mix(in srgb,var(--palette-shadow) 12%,transparent);
+  --nav-glass-background:color-mix(in srgb,var(--palette-bg) 80%,transparent);--nav-glass-blur:14px;
+  --palette-shadow:var(--palette-media-bg);--brand-co:var(--palette-ink);--brand-sens:var(--palette-accent);
+  accent-color:var(--palette-accent);
+}
+html,body,:root:has(.waitlist-page),body:has(.waitlist-page){background:var(--palette-bg);color:var(--palette-ink)}
+:root{color-scheme:dark}
+:root[data-theme=light]{color-scheme:light}
+.cs-legacy{--surface:var(--palette-surface);--code:var(--palette-code-bg);--code-ink:var(--palette-code-ink)}
+::selection{background:var(--palette-brand);color:var(--palette-on-brand)}
+:where(a,button,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid var(--palette-accent);outline-offset:4px}
+:where(input,textarea)::placeholder{color:var(--palette-muted);opacity:1}
+:where(input,select,textarea){color:var(--palette-ink);accent-color:var(--palette-accent)}
+:where(input,textarea):autofill{background:var(--palette-soft);color:var(--palette-ink)}
+:where(input,textarea):-webkit-autofill{-webkit-text-fill-color:var(--palette-ink);box-shadow:0 0 0 1000px var(--palette-soft) inset;caret-color:var(--palette-ink)}
+:where(button,input,select,textarea):disabled{opacity:1;color:var(--palette-disabled-ink);background:var(--palette-disabled-bg);cursor:not-allowed}
+
+/* One click switches between light and dark. */
+.cs-theme-picker{position:relative;flex:none}
+.cs-theme-picker-desktop{margin-left:auto}
+.cs-theme-picker-mobile{display:none}
+.cs-header .cs-navigation>.cs-theme-picker+.cs-button{margin-left:0}
+.cs-theme-control{display:grid;place-items:center;width:44px;height:44px;padding:0;border:1px solid transparent;border-radius:50%;background:transparent;color:var(--palette-ink);font:inherit;cursor:pointer}
+.cs-theme-control:hover{background:var(--palette-hover)}
+.cs-theme-control:focus-visible{outline:3px solid var(--palette-accent);outline-offset:3px}
+.cs-theme-current-icon{grid-area:1/1;display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;opacity:0;transform:scale(.72);pointer-events:none;transition:opacity 160ms cubic-bezier(.22,1,.36,1),transform 240ms cubic-bezier(.22,1,.36,1)}
+:root[data-theme=light] .cs-theme-current-icon[data-theme-icon=light],:root[data-theme=dark] .cs-theme-current-icon[data-theme-icon=dark]{opacity:1;transform:scale(1)}
+@media(prefers-reduced-motion:reduce){.cs-theme-current-icon{transition:none}}
+.cs-wordmark-pair{display:inline-flex;align-items:center;flex:none;max-width:100%}
+.cs-wordmark-dark{display:none}
+:root:not([data-theme=light]) .cs-wordmark-light{display:none}
+:root:not([data-theme=light]) .cs-wordmark-dark{display:block}
+.cs-header-inner{gap:18px}
+@media(max-width:1050px){.cs-header-inner{gap:12px}.cs-theme-picker-desktop{display:none}.cs-theme-picker-mobile{display:block;order:0;margin-left:auto}.cs-menu-toggle{order:2;margin-left:0;min-width:44px;min-height:44px}.cs-navigation{order:3}}
+@media(max-width:360px){.cs-header-inner{gap:6px}}
+
+/* Actions retain the precise supplied brand fill and a dark, readable label. */
+:root :is(.cs-button,.button-dark,.waitlist-submit,.choice-action,.btn:not(.secondary)){
+  background:var(--palette-brand);color:var(--palette-on-brand);border:0;box-shadow:none;
+}
+:root .pricing-plus .pricing-action{border:0}
+:root :is(.cs-button,.button-dark,.waitlist-submit,.btn:not(.secondary)):hover{background:var(--palette-brand-hover);color:var(--palette-on-brand);opacity:1}
+:root :is(.cs-button,.button-dark,.waitlist-submit,.btn:not(.secondary)):active{background:var(--palette-brand-pressed)}
+:root :is(.cs-button,.button-dark,.waitlist-submit,.btn):disabled{background:var(--palette-disabled-bg);color:var(--palette-disabled-ink);border-color:var(--palette-boundary);opacity:1}
+:root .btn.secondary{background:var(--palette-surface);color:var(--palette-ink);border-color:var(--palette-boundary)}
+:root .btn.secondary:hover{background:var(--palette-hover);opacity:1}
+:root :is(.industry-tabs button.active,.industry-tabs a.active,.tab-indicator){background:var(--palette-brand);color:var(--palette-on-brand)}
+:root .industry-tabs:has(.tab-indicator) button.active{background:transparent}
+:root :is(.step[aria-selected=true],.journey-step-tabs button[aria-pressed=true],.story-dots button[aria-pressed=true]){background:var(--palette-tint);color:var(--palette-accent);border-color:var(--palette-accent)}
+:root :is(.cs-nav-link[aria-current=page],.cs-nav-link[aria-current=location],.doc-nav-link.active){color:var(--palette-accent)}
+:root :is(.text-link,.api-preview-links a,.journey-resources a){color:var(--palette-accent)}
+:root .text-link{border-color:currentColor}
+.cs-header.is-scrolled,.nav.cs-header.is-scrolled{background:var(--nav-glass-background);border-color:var(--palette-line)}
+.cs-footer-copyright{color:var(--palette-muted)}
+
+/* Code follows the page theme, including its toolbar, tabs, copy state and syntax. */
+:root :is(.code-window,.setup-code){background:var(--palette-code-bg);color:var(--palette-code-ink);border-color:var(--palette-boundary)}
+:root :is(.code-header,.code-bottom){border-color:var(--palette-line);color:var(--palette-muted)}
+:root :is(.tab,.copy){color:var(--palette-muted)}
+:root .tab[aria-selected=true]{color:var(--palette-accent);border-color:var(--palette-accent)}
+:root :is(.code-window pre,.code-window code,.setup-code pre,.setup-code code){background:transparent;color:var(--palette-code-ink)}
+:root :is(.code-window,.setup-code) :is(.comment,.cm){color:var(--palette-code-comment)}
+:root :is(.code-window,.setup-code) :is(.keyword,.kw){color:var(--palette-code-keyword)}
+:root :is(.code-window,.setup-code) :is(.string,.str){color:var(--palette-code-string)}
+:root :is(.code-window,.setup-code) :is(.number,.num,.token.property){color:var(--palette-code-number)}
+:root :is(.code-window,.setup-code) .token.function{color:var(--palette-code-function)}
+
+/* Form boundaries are stronger than decorative dividers. */
+:root :is(.waitlist-form,.access-form-panel) :is(input:not([type=checkbox]),textarea,select){border:1px solid var(--palette-boundary);background-color:var(--palette-surface);color:var(--palette-ink)}
+:root :is(.waitlist-form,.access-form-panel) :is(input,textarea,select):focus{outline:3px solid var(--palette-accent);outline-offset:2px;box-shadow:none}
+:root .waitlist-form .waitlist-interests label{border-color:var(--palette-boundary);background:var(--palette-surface)}
+:root .waitlist-interests label:has(input:checked){border-color:var(--palette-accent);background:var(--palette-tint)}
+:root .waitlist-error,:root [data-state=error]{color:var(--palette-error)}
+:root [aria-invalid=true]{border-color:var(--palette-error)}
+:root .waitlist-success-icon{background:var(--palette-success-bg);color:var(--palette-success);box-shadow:0 0 0 8px var(--palette-success-bg)}
+:root :is(.waitlist-pattern-background,.waitlist-page){background:var(--palette-bg)}
+:root .waitlist-page{background:transparent}
+:root .search{border-color:var(--palette-boundary);color:var(--palette-ink);background:var(--palette-surface)}
+
+/* Real media and third-party identities keep their authored colors. */
+.comparison-wrap .cs-wordmark{filter:none}
+:root .comparison-logo,:root .client-logo,:root .orbit-icon{background:#fdfef8;border-radius:4px}
+/* Avatar comparison marks keep their transparency and follow the resolved theme. */
+:root .comparison-section-avatar .comparison-logo{background:transparent;border-radius:0;filter:brightness(0)}
+:root:not([data-theme=light]) .comparison-section-avatar .comparison-logo{filter:brightness(0) invert(1)}
+:root :is(.video-label,.video-play){color:var(--palette-media-ink)}
+:root .video-play{background:color-mix(in srgb,var(--palette-media-bg) 85%,transparent);border-color:var(--palette-media-ink)}
+:root .video-label{background:color-mix(in srgb,var(--palette-media-bg) 85%,transparent);padding:4px 8px;border-radius:4px}
+:root .hero-carousel-dots button{background:var(--palette-media-muted)}
+:root .hero-carousel-dots button.is-active{background:var(--palette-media-ink)}
+:root .hero-carousel-dots button:focus-visible{outline-color:var(--palette-media-ink)}
+@media(forced-colors:active){:root :is(.cs-theme-control,.btn,.button-dark,.cs-button,.waitlist-submit){border:1px solid ButtonText}:root :focus-visible{outline-color:Highlight}.cs-wordmark-pair{forced-color-adjust:none}}
+/* Customer logos use their authored light/dark artwork, including the no-JS fallback. */
+:root .cs-centered-page .company-set img.company-logo{width:80%;height:80%;background:transparent;opacity:.8;filter:none}
+:root .cs-centered-page .company-set img.company-logo-dark{opacity:.9}
+.company-logo-dark{display:none}
+:root:not([data-theme=light]) .company-logo-light{display:none}
+:root:not([data-theme=light]) .company-logo-dark{display:block}
+:root .trusted .client-logo img{opacity:1;filter:none}
+
+/* Wires conveying process flow need more contrast than decorative grid guides. */
+:root :is(.sdk-flow-svg .wire,.sdk-flow-svg .icon,.story-wires,.wire-base){stroke:var(--palette-boundary)}
+:root .sdk-flow-svg .wire.active{stroke:var(--palette-accent)}
+
+/* Light diagrams use solid neutral faces, with decorative grid lines behind them.
+   The default dark values preserve the translucent treatment. */
+:root{
+  --diagram-plane-opacity:.92;--diagram-object-opacity:.95;
+  --diagram-shadow-opacity:.08;--diagram-grid-opacity:.42;
+}
+:root:not([data-theme=light]){
+  --diagram-plane-opacity:.7;--diagram-object-opacity:.7;
+  --diagram-shadow-opacity:.14;--diagram-grid-opacity:1;
+}
+:root .brain-diagram .stack-plane{fill-opacity:var(--diagram-plane-opacity)}
+:root .brain-diagram :is(.reason-cube path,.memory-cluster circle,.learn-pyramid polygon){fill-opacity:var(--diagram-object-opacity)}
+:root .brain-diagram .object-shadow{opacity:var(--diagram-shadow-opacity)}
+:root .brain-diagram rect[fill="url(#brain-grid)"]{opacity:var(--diagram-grid-opacity)}

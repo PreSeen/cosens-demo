@@ -1,0 +1,29 @@
+// Cloudflare Pages config for demo.cosens.ai.
+// DEMO_SESSION_SECRET is a secret: wrangler pages secret put DEMO_SESSION_SECRET --project-name cosens-demo.
+// DEMO_PRIVATE_NAMES (optional secret) lists names that must never appear in an error shown to a visitor.
+// DEMO_OAUTH_CLIENT_ID is the first-party OAuth client (not a secret); only that client gets the service scopes.
+// Memory is reached through the RSI gateway (DEMO_MEMORY_VIA_GATEWAY), which takes Markdown and text uploads only.
+{
+  "name": "cosens-demo",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2026-10-17",
+  "kv_namespaces": [
+    {
+      "binding": "DEMO_KV",
+      "id": "__KV_ID__"
+    }
+  ],
+  "vars": {
+    "SITE_DEFAULT_LOCALE": "en",
+    "DEMO_MEMORY_BASE": "https://rsi.cosens.ai/api",
+    "DEMO_MEMORY_VIA_GATEWAY": "true",
+    "DEMO_ACCOUNT_BASE": "https://api.cosens.ai",
+    "DEMO_OAUTH_BASE": "https://api.cosens.ai",
+    "DEMO_OAUTH_RESOURCE": "https://memory.cosens.ai",
+    "DEMO_RSI_BASE": "https://rsi.cosens.ai/api",
+    "DEMO_LLM_BASE": "https://llm.cosens.ai/v1",
+    "DEMO_LLM_MODEL": "deepseek-flash",
+    "DEMO_OAUTH_SCOPES": "openid email offline_access memory.read memory.write memory.document.upload vu.manage rsi.read rsi.write llm.invoke",
+    "DEMO_OAUTH_CLIENT_ID": "cosens-demo-hub"
+  }
+}

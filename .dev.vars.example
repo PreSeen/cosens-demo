@@ -1,0 +1,8 @@
+# Local settings for `npx wrangler pages dev dist`. Copy to .dev.vars (gitignored) and fill in the secret:
+#   cp .dev.vars.example .dev.vars
+#   sed -i "s|^DEMO_SESSION_SECRET=.*|DEMO_SESSION_SECRET=$(openssl rand -hex 32)|" .dev.vars
+# The service addresses default to the values in wrangler.jsonc.
+SITE_DEFAULT_LOCALE=en
+DEMO_SESSION_SECRET=
+# Optional: comma-separated names that must never appear in an error shown to a visitor.
+DEMO_PRIVATE_NAMES=

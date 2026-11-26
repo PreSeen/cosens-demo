@@ -1,0 +1,342 @@
+/* Demo hub styles. Layout and components are ported from cosens-investor-demo mock/index.html (lines 24-121)
+   plus real/static/index.html (lines 85-88). The mock's own colour tokens are mapped onto the site palette
+   (shared/theme-tokens.mjs -> --palette-*), so the site's light/dark switch applies; no system colour-scheme query. */
+@import '../../../../shared/theme.css';
+
+.demo{
+  --bg:var(--palette-soft);--card:var(--palette-surface);--ink:var(--palette-ink);--ink2:var(--palette-muted);
+  --ink3:color-mix(in oklab,var(--palette-muted) 82%,var(--palette-bg));--line:var(--palette-line);
+  --brand:var(--palette-brand);--brand-ink:var(--palette-accent);--brand-bg:var(--palette-tint);
+  --warn:var(--palette-warning);--warn-bg:var(--palette-warning-bg);--ok:var(--palette-success);--ok-bg:var(--palette-success-bg);
+  --blue:var(--palette-info);--blue-bg:var(--palette-info-bg);--err:var(--palette-error);--err-bg:var(--palette-error-bg);
+}
+.demo *{box-sizing:border-box}
+body.demo{margin:0;min-width:320px;background:var(--palette-bg);color:var(--ink);font:15px/1.7 -apple-system,"PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif}
+.demo [hidden]{display:none!important}
+
+/* Header */
+.demo-header{display:flex;align-items:center;gap:12px;padding:8px 24px;border-bottom:1px solid var(--line)}
+.demo-brand{display:flex;align-items:center;gap:10px;flex:none;color:var(--ink2);text-decoration:none;font-size:14px}
+.demo-header .cs-wordmark{width:auto;height:26px}
+.demo-brand-label{padding-left:10px;border-left:1px solid var(--line)}
+.status{display:flex;gap:8px;font-size:13px;margin-left:auto;min-width:0}
+.demo-account{display:flex;align-items:center;gap:4px;font-size:13px;flex:none}
+/* Language switch (EN and the Chinese name): both names, the current one in the ink colour (aria-current), next to the theme switch. */
+.cs-locale-control{display:inline-flex;align-items:center;gap:3px;min-height:44px;padding:0 10px;border:1px solid transparent;border-radius:999px;background:transparent;color:var(--palette-muted);font:inherit;font-size:13px;cursor:pointer}
+.cs-locale-control:hover{background:var(--palette-hover)}
+.cs-locale-control:focus-visible{outline:3px solid var(--palette-accent);outline-offset:3px}
+.cs-locale-control .on{color:var(--palette-ink);font-weight:600}
+.cs-locale-control .sep{opacity:.5}
+.demo-email{color:var(--ink3);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip{padding:3px 10px;border-radius:999px;background:var(--card);border:1px solid var(--line);color:var(--ink2);white-space:nowrap}
+.chip.on{background:var(--brand-bg);border-color:transparent;color:var(--brand-ink)}
+
+/* Run bar */
+.runbar{max-width:780px;margin:16px auto 0;padding:0 16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;font-size:13px}
+.runbar-name{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;min-width:0}
+/* The label never breaks; the name keeps its full width and the 已有空间 tag wraps below it when the row is too narrow. */
+.runbar-name .meta{flex:none;white-space:nowrap}
+.runbar-name b{flex:0 0 auto;max-width:100%;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.runbar-actions{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.menu-wrap{position:relative}
+.menu{position:absolute;right:0;top:calc(100% + 6px);z-index:10;width:min(340px,calc(100vw - 32px));max-height:60vh;overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:6px;box-shadow:0 8px 28px color-mix(in srgb,var(--palette-media-bg) 18%,transparent)}
+/* While the menu is open a fixed scrim covers the whole page (the hero ring under the menu included); clicks pass through. */
+body.demo:has(#runMenu:not([hidden]))::after{content:"";position:fixed;inset:0;z-index:9;pointer-events:none;background:color-mix(in srgb,var(--palette-bg) 65%,transparent)}
+.menu button{display:block;width:100%;text-align:left;border:0;background:none;color:var(--ink);font:inherit;font-size:13px;padding:8px 10px;border-radius:8px;cursor:pointer}
+.menu button:hover{background:var(--bg)}
+.menu button.on{background:var(--brand-bg);color:var(--brand-ink)}
+.menu button .meta{display:block;font-size:12px}
+.menu p{margin:6px 10px}
+
+/* Page body (mock lines 34-121) */
+.demo main{max-width:780px;margin:0 auto;padding:28px 16px 120px}
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;transition:padding .4s}
+.mark{width:132px;height:132px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);cursor:pointer;position:relative;transition:transform .2s,border-color .2s}
+.mark:hover{transform:scale(1.03)}
+.mark .crop{width:92px;height:92px;overflow:hidden}
+.mark .crop img{height:92px;width:auto}
+.mark.drag{border:2px dashed var(--brand);transform:scale(1.08)}
+.mark.busy::after{content:"";position:absolute;inset:-7px;border-radius:50%;border:3px solid transparent;border-top-color:var(--brand);animation:spin 1.1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.hero.compact .mark{width:84px;height:84px}
+.hero.compact .mark .crop{width:58px;height:58px}
+.hero.compact .mark .crop img{height:58px}
+.prompt{margin:18px 0 4px;font-size:20px;font-weight:500;text-wrap:balance}
+.sub{color:var(--ink2);margin:0;font-size:14px;text-wrap:balance;word-break:keep-all;overflow-wrap:anywhere}
+.steps{display:flex;gap:6px;margin:22px 0 0;font-size:13px;color:var(--ink2)}
+.steps>*{display:flex;align-items:center;gap:6px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);color:inherit;font:inherit}
+.steps button{cursor:pointer}
+.steps button:disabled{cursor:default;background:var(--card);color:inherit}
+/* A step not reached yet (neither done nor current) keeps a dashed outline, clickable or not. */
+#steps>.todo{border-style:dashed;border-color:var(--palette-boundary)}
+/* An earlier step still writing (or learning) while the next one is current: outlined, with a small spinner. */
+#steps>.run{color:var(--brand-ink);border-color:var(--brand)}
+#steps>.run::before{content:"";width:9px;height:9px;border-radius:50%;border:1.5px solid var(--brand-ink);border-top-color:transparent;animation:spin 1s linear infinite}
+#steps>.fail{color:var(--warn);background:var(--warn-bg);border-color:transparent}
+.steps>.done{color:var(--ok);background:var(--ok-bg);border-color:transparent}
+.steps>.cur{color:var(--brand-ink);background:var(--brand-bg);border-color:transparent}
+.steps>.sel{box-shadow:0 0 0 2px var(--brand)}
+.panel{margin-top:28px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:14px}
+.card h3{margin:0 0 10px;font-size:15px;font-weight:600}
+/* No one-character last lines in headings and body text. */
+.card h3,.card h4,.card p,.person p,.gap,.src{text-wrap:pretty}
+/* A heading's badge follows a space in the markup, so it needs no margin and starts flush when it wraps. */
+.card h3 .tag{margin-left:0}
+.card h3.balanced{text-wrap:balance;word-break:keep-all;overflow-wrap:anywhere}
+.card p.lead{margin:0;color:var(--ink2);font-size:14px}
+/* The Recipe description is written by RSI: smaller, muted, three lines until Expand. */
+.rdesc{margin:0;font-size:13px;color:var(--ink3)}
+.rdesc.clamp{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;line-clamp:3;overflow:hidden}
+.rdesc+[data-desc-toggle]{padding:0;margin:2px 0 4px}
+/* Markdown headings inside the Recipe stay below the card title (15px). */
+.recipe h1,.recipe h2{font-size:14px;margin:.9em 0 .3em}
+.recipe h3,.recipe h4{font-size:13px;margin:.8em 0 .3em}
+.card p.plain{margin:0}
+.note{margin:10px 0 0}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin:10px 0 4px}
+.bar i{display:block;height:100%;width:0;background:var(--brand);transition:width .3s}
+.meta{font-size:13px;color:var(--ink3)}
+.files{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.file{font-size:12px;padding:3px 9px;border-radius:6px;background:var(--bg);color:var(--ink2);border:1px solid var(--line);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file.ok{color:var(--ok);background:var(--ok-bg);border-color:transparent}
+.file.err{color:var(--err);background:var(--err-bg);border-color:transparent}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.stat{background:var(--bg);border-radius:10px;padding:10px 12px}
+.stat b{display:block;font-size:22px;font-weight:600}
+.stat span{font-size:12px;color:var(--ink3)}
+.live{margin-top:12px}
+.phase{display:flex;align-items:flex-start;gap:10px;padding:6px 0;color:var(--ink3);font-size:14px}
+.phase .dot{width:18px;height:18px;margin-top:3px;border-radius:50%;border:1.5px solid var(--line);flex:none;display:grid;place-items:center;font-size:11px}
+.phase.run{color:var(--ink)}.phase.run .dot{border-color:var(--brand-ink);border-top-color:transparent;animation:spin 1s linear infinite}
+.phase.ok{color:var(--ink2)}.phase.ok .dot{background:var(--ok);border-color:var(--ok);color:var(--card)}
+.phase.err{color:var(--err)}.phase.err .dot{border-color:var(--err);color:var(--err)}
+.phase .find{margin-left:auto;font-size:12px;color:var(--brand-ink);white-space:nowrap}
+.phase .find:empty{display:none}
+.phase .ptext{flex:1 1 0;min-width:0}
+ol.rules{margin:6px 0 0;padding-left:20px}ol.rules li{margin:4px 0}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:10px;margin-left:6px;vertical-align:1px;font-weight:400}
+.tag.ok{background:var(--ok-bg);color:var(--ok)}.tag.warn{background:var(--warn-bg);color:var(--warn)}.tag.blue{background:var(--blue-bg);color:var(--blue)}
+.verdict{border-left:4px solid var(--brand);border-radius:0 14px 14px 0}
+.alert{background:var(--warn-bg);border-color:transparent;color:var(--warn)}
+.alert h3{color:var(--warn)}
+.alert p{margin:0;color:var(--ink)}
+.person{display:grid;grid-template-columns:44px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.person:first-of-type{border-top:0;padding-top:4px}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:600;background:var(--brand-bg);color:var(--brand-ink)}
+.person .name{font-weight:600}
+.person p{margin:2px 0;font-size:14px;color:var(--ink2)}
+.path{font-size:13px;color:var(--ink)}
+.person p.path{color:var(--ink)}
+.src{font-size:12px;color:var(--ink3)}
+
+.src.note{margin-top:6px}
+.unv{color:var(--warn)}
+.qlog{font-size:13px;color:var(--ink2);margin:6px 0 0;padding-left:18px}
+.qlog li{margin:6px 0}
+.qlog .meta{display:block}
+.srcitem{display:inline-block;max-width:100%}
+/* Recall queries: the model's keywords as chips, or its sentence in quotes. */
+.query{display:inline-flex;flex-wrap:wrap;gap:4px;vertical-align:top}
+.phase .query{display:inline;}
+.qterm{display:inline-block;max-width:100%;overflow-wrap:anywhere;font-size:12px;line-height:1.5;padding:0 7px;border-radius:6px;background:var(--bg);border:1px solid var(--line);color:var(--ink2)}
+.phase .qterm{margin:0 4px 2px 0}
+/* Scroll boxes fade out at the bottom, so a cut-off line reads as "more below"; the bottom padding keeps the last line clear of the fade. */
+.vbody{-webkit-mask-image:linear-gradient(#000 calc(100% - 28px),transparent);mask-image:linear-gradient(#000 calc(100% - 28px),transparent)}
+/* Collapsed Recipe: snapRecipe() in main.ts sets max-height on a line boundary, and the fade spans one line, so no glyph is cut. */
+.recipe{font-size:14px;max-height:340px;overflow:hidden;background:var(--bg);border-radius:10px;padding:4px 14px;margin-top:10px;-webkit-mask-image:linear-gradient(#000 calc(100% - 1.7em),transparent);mask-image:linear-gradient(#000 calc(100% - 1.7em),transparent)}
+.recipe.open{max-height:none;-webkit-mask-image:none;mask-image:none}
+.recipe+[data-recipe-toggle]{margin-top:4px;padding-left:0}
+.more{margin-top:10px}.more summary{cursor:pointer}
+.gap{font-size:14px;color:var(--ink2);background:var(--bg);border-radius:10px;padding:10px 12px;margin-top:10px}
+.fade{animation:fade .35s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.fade,.mark.busy::after,.phase.run .dot,#steps>.run::before{animation:none}}
+.hint{min-height:22px;margin:10px 0 0;font-size:13px;color:var(--warn)}
+.mats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:22px}
+.mgroup{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;cursor:grab}
+.mgroup.dragging{opacity:.5}
+.mgroup.cur{border-color:var(--brand)}
+/* The step uses the visitor's own files: the demo card says so and steps back. */
+.mown{margin:6px 0 0;font-size:12px;color:var(--warn);word-break:keep-all;overflow-wrap:anywhere}
+/* Own files in use: the card lists the visitor's files (dimmed, not previewable) and a one-line note, no demo list or hand-over button,
+   and sizes to its content instead of stretching to the row. */
+.mgroup.own{align-self:start}
+.mgroup.own .mfiles,.mgroup.own .mfoot{display:none}
+.ownfiles{list-style:none;margin:8px 0 0;padding:0}
+.ownfiles li{display:flex;align-items:flex-start;gap:6px;padding:4px 6px;font-size:13px;color:var(--ink3)}
+.ownfiles li .fn{flex:1;min-width:0;overflow-wrap:anywhere}
+.ownfiles li .ic{font-size:12px;flex:none}
+.mhead{display:flex;align-items:center;gap:10px}
+.mnum{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:var(--brand-bg);color:var(--brand-ink);flex:none}
+.mgroup.given .mnum{background:var(--ok-bg);color:var(--ok)}
+.mhead b{display:block;font-size:14px}
+.mhead .meta{font-size:12px}
+.mfiles{list-style:none;margin:8px 0 0;padding:0;flex:1}
+.mfiles li{display:flex;align-items:flex-start;gap:6px;padding:4px 6px;border-radius:6px;font-size:13px;color:var(--ink2);cursor:pointer}
+.mfiles li:hover,.mfiles li:focus-visible{background:var(--bg);color:var(--ink)}
+.mfiles li .fn{flex:1;min-width:0;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow-wrap:anywhere;text-wrap:pretty}
+.mfiles li .ic{color:var(--ink3);font-size:12px;flex:none;line-height:inherit}
+.mfoot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px}
+.lnk{border:0;background:none;color:var(--ink3);font:inherit;font-size:12px;cursor:pointer;padding:4px 6px;text-decoration:none}
+.lnk.strong{color:var(--brand-ink);font-size:14px;padding:0;text-decoration:underline}
+.give{display:inline-block;border:1px solid var(--line);background:var(--bg);color:var(--brand-ink);border-radius:999px;font:inherit;font-size:12px;line-height:inherit;padding:3px 12px;cursor:pointer;text-decoration:none}
+.primary{display:inline-block;border:0;border-radius:999px;background:var(--palette-brand);color:var(--palette-on-brand);font:inherit;font-size:14px;font-weight:600;padding:6px 16px;cursor:pointer;text-decoration:none}
+.primary:hover{background:var(--palette-brand-hover)}
+.primary:disabled,.give:disabled{background:var(--palette-disabled-bg);color:var(--palette-disabled-ink);border-color:transparent;cursor:not-allowed}
+.btnrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+.btnrow.center{justify-content:center}
+.alert .btnrow{margin-top:10px}
+.alert .give{background:var(--card)}
+.viewer{position:fixed;inset:0;display:flex;align-items:flex-start;justify-content:center;padding:16px;z-index:20}
+/* brightness(.55) on the page equals a 45% black backdrop, and it also dims what lies outside the viewport (full-page captures, overscroll). */
+body.viewer-open{position:fixed;left:0;right:0;overflow:hidden}
+body.viewer-open #root{background:var(--palette-bg);filter:brightness(.55)}
+.vbox{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 40px rgba(0,0,0,.45);width:100%;max-width:780px;max-height:100%;display:flex;flex-direction:column}
+.vhead{display:flex;align-items:center;gap:10px;padding:12px 18px;border-bottom:1px solid var(--line);font-weight:600}
+.vhead span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vbody{overflow:auto;padding:6px 22px 28px;font-size:14px}
+/* A table wider than its box scrolls sideways; a shade on the edge that hides columns and a visible scrollbar say so.
+   The covers (local) move with the content and hide the shade (scroll) once that edge is reached. */
+.table-wrap{--wrap-bg:var(--card);--wrap-shade:color-mix(in srgb,var(--ink) 30%,transparent);overflow-x:auto;margin:10px 0;padding-bottom:4px;
+  background:linear-gradient(to right,var(--wrap-bg) 40%,transparent) left/28px 100% no-repeat local,linear-gradient(to left,var(--wrap-bg) 40%,transparent) right/28px 100% no-repeat local,
+  radial-gradient(farthest-side at 0 50%,var(--wrap-shade),transparent) left/14px 100% no-repeat scroll,radial-gradient(farthest-side at 100% 50%,var(--wrap-shade),transparent) right/14px 100% no-repeat scroll}
+.recipe .table-wrap{--wrap-bg:var(--bg)}
+.table-wrap::-webkit-scrollbar{height:6px}
+.table-wrap::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px}
+.table-wrap::-webkit-scrollbar-track{background:transparent}
+.vbody table,.recipe table{border-collapse:collapse;width:100%;font-size:13px}
+.vbody th,.vbody td,.recipe th,.recipe td{border:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top;min-width:4.5em}
+.vbody th,.recipe th,.vbody td.short,.recipe td.short{white-space:nowrap}
+.vbody td,.recipe td{text-wrap:pretty}
+.nobr{white-space:nowrap}
+.vbody th,.recipe th{background:var(--bg)}
+.vbody h1{font-size:19px;text-wrap:balance}
+/* A line that starts with a full-width opening bracket drops the bracket's built-in leading space. */
+.vbody h1,.vbody h2,.vbody h3{text-spacing-trim:trim-start}.vbody h2{font-size:16px}.vbody h3{font-size:15px}
+.vbody pre{white-space:pre-wrap;font:inherit}
+.vbody a,.recipe a{color:var(--brand-ink)}
+
+/* Start card: a new demo space or one of the visitor's own spaces (radio cards). */
+.choices,.spaces{display:grid;gap:8px;margin-top:12px}
+.choices{grid-template-columns:1fr 1fr}
+.spaces{max-height:330px;overflow:auto;padding:2px;margin-top:6px;gap:6px}
+/* A long list fades at the bottom so a cut-off row reads as "more below"; the last row scrolls clear of the fade. */
+.spaces:has(.space:nth-child(5)){padding-bottom:24px;-webkit-mask-image:linear-gradient(#000 calc(100% - 24px),transparent);mask-image:linear-gradient(#000 calc(100% - 24px),transparent)}
+.space{padding:8px 12px}
+.choice,.space{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg);cursor:pointer;min-width:0}
+.choice:hover,.space:hover{border-color:var(--palette-boundary)}
+.choice.on,.space.on{border-color:var(--brand);background:var(--brand-bg)}
+.choice input,.space input{margin:4px 0 0;flex:none;accent-color:var(--brand)}
+.choice:has(input:focus-visible),.space:has(input:focus-visible){outline:2px solid var(--brand);outline-offset:-2px}
+.choice input:focus-visible,.space input:focus-visible{outline:none}
+.choice-body{display:flex;flex-direction:column;min-width:0}
+.choice-body b{font-size:14px;font-weight:600;overflow-wrap:anywhere}
+.choice-body .meta{font-size:13px;text-wrap:pretty}
+.space .tag{vertical-align:1px}
+.tag:not(.ok,.warn,.blue){background:var(--card);color:var(--ink2);border:1px solid var(--line)}
+.spaces-note{margin:10px 0 0}
+.spaces-note .btnrow{margin-top:6px}
+.spacewarn{margin:12px 0 0;padding:10px 12px;border-radius:10px;background:var(--warn-bg);color:var(--warn);font-size:13px;text-wrap:pretty}
+.runbar-name .tag{flex:none;margin-left:0}
+.menu .menu-foot{margin-top:4px;border-top:1px solid var(--line);border-radius:0 0 8px 8px;color:var(--brand-ink)}
+.menu .menu-foot:disabled{color:var(--palette-disabled-ink);cursor:not-allowed}
+
+/* Own-file drop zones, slot grid, slot dialog, failures */
+.drop{margin-top:12px;border:1.5px dashed var(--palette-boundary);border-radius:12px;padding:12px 14px;text-align:center;font-size:14px;color:var(--ink2);transition:border-color .2s,background .2s}
+.drop p{margin:0;text-wrap:balance;word-break:keep-all;overflow-wrap:anywhere}
+.drop .meta{margin-top:4px;font-size:12px}
+.hint-lines>span{display:block}
+.drop.over{border-color:var(--brand);background:var(--brand-bg)}
+.slots{display:grid;grid-template-columns:auto 1fr 1fr;gap:6px 10px;align-items:center;margin-top:12px;font-size:13px}
+.slots .head{font-size:12px;color:var(--ink3)}
+.slots .row-head{display:none}
+.slots .rowhead{color:var(--ink2)}
+.slots .slot{background:var(--bg);border-radius:8px;padding:6px 10px;color:var(--ink3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.slots .slot.ok{background:var(--ok-bg);color:var(--ok)}
+.project{padding:12px 0;border-top:1px solid var(--line)}
+.project:first-of-type{border-top:0;padding-top:0}
+.project h4{margin:0;font-size:14px;font-weight:600}
+.assign{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;margin-top:10px;font-size:13px}
+.assign .fn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.assign select{font:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--palette-boundary);border-radius:6px;background:var(--card);color:var(--ink)}
+.errtext{color:var(--err);font-size:13px;margin:8px 0 0}
+.failed{margin:10px 0 0;padding-left:18px;font-size:13px;color:var(--ink2)}
+.failed li{margin:4px 0}
+.failed .give{margin-left:6px}
+.pollnote{text-align:center;margin:0 0 10px}
+
+/* Hub */
+.banner{background:var(--err-bg);color:var(--err);border-radius:12px;padding:12px 16px;margin-bottom:18px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;font-size:14px}
+/* Still signed in: the failed attempt is information, not an error. */
+.banner.info{background:var(--blue-bg);color:var(--blue)}
+/* The text takes the full row (the button wraps below it); pretty wrapping avoids a lone last character. */
+.banner span{flex:1 1 100%;text-wrap:pretty}
+.hub h1{margin:0;font-size:26px;font-weight:600}
+.hub-sub{margin:6px 0 24px;color:var(--ink2)}
+.demo-list{display:grid;gap:14px}
+.demo-card{display:block;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;color:var(--ink);text-decoration:none;transition:border-color .2s,transform .2s}
+.demo-card:hover{border-color:var(--brand);transform:translateY(-1px)}
+.demo-card h2{margin:0 0 4px;font-size:17px;font-weight:600}
+.demo-card p{margin:0;color:var(--ink2);font-size:14px}
+.demo-card p.meta{color:var(--ink3);font-size:13px}
+.demo-card .steps{margin:14px 0 12px;flex-wrap:wrap;justify-content:flex-start}
+.demo-card .go{margin-top:12px;color:var(--brand-ink);font-size:14px;font-weight:600}
+
+/* Phones (mock line 121, extended) */
+@media (max-width:600px){
+  .stats{grid-template-columns:1fr 1fr 1fr}
+  /* Phones: row 1 wordmark, language and theme switches, sign-out; row 2 both status chips and the signed-in email (full texts in title). */
+  .demo-header{flex-wrap:wrap;padding:6px 16px;gap:4px 6px}
+  .demo-header .cs-wordmark{height:22px}
+  .demo-brand-label{display:none}
+  .demo-account{display:contents}
+  .demo-account .cs-locale-control{order:1;margin-left:auto}
+  .demo-account .cs-theme-control{order:1}
+  .demo-account [data-shell-logout]{order:2}
+  .demo-header::after{content:"";order:3;flex-basis:100%}
+  .status{order:4;margin-left:0;font-size:12px;gap:6px}
+  .status:empty{display:none}
+  .status .chip{padding:2px 8px;min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .demo-email{order:5;flex:1 1 0;min-width:8em;max-width:none;text-align:right;font-size:12px}
+  .demo main{padding:20px 16px 80px}
+  .prompt{font-size:18px}
+  .steps{flex-wrap:wrap;justify-content:center}
+  .runbar{margin-top:12px;position:relative}
+  .menu-wrap{position:static}
+  .menu{left:16px;right:16px;width:auto}
+  .slots{grid-template-columns:1fr 1fr}
+  .slots .rowhead{grid-column:1/-1}
+  .slots .rowhead~.rowhead{margin-top:10px}
+  /* Live rows: a recall result goes under its query, so the query keeps the full width. */
+  .phase{flex-wrap:wrap;row-gap:0}
+  .phase .find{flex-basis:100%;margin-left:28px;white-space:normal}
+  .slots .corner,.slots .top-head{display:none}
+  .slots .row-head{display:block}
+  .assign{grid-template-columns:1fr 1fr}
+  .assign .fn{grid-column:1/-1}
+  .card{padding:16px}
+  .choices{grid-template-columns:1fr}
+  .person .name .tag{display:table;margin:4px 0 0}
+  /* Tables stack on phones: one bordered block per row, each value after its column header, so no column is cut off. */
+  .table-wrap{background:none;overflow:visible;padding-bottom:0}
+  .table-wrap thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  .table-wrap table,.table-wrap tbody,.table-wrap tr{display:block;width:100%}
+  .table-wrap tr{border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin:0 0 8px}
+  .table-wrap td,.table-wrap td.short{display:grid;grid-template-columns:5.5em 1fr;gap:8px;border:0;padding:2px 0;min-width:0;white-space:normal}
+  .table-wrap td::before{content:attr(data-label);color:var(--ink3);font-size:12px;line-height:inherit}
+}
+
+/* Narrow phones: the signed-in email gets its own full-width row (full address in its title). */
+@media (max-width:480px){
+  .demo-email{flex-basis:100%;text-align:left}
+}
+
+/* Phones: the viewer is a full-height sheet with its own top padding, so nothing behind it shows above its edge. */
+@media (max-width:600px){
+  .viewer{padding:0!important}
+  .vbox{max-width:none;max-height:none;height:100%;border:0;border-radius:0;box-shadow:none}
+  .vhead{padding-top:max(14px,env(safe-area-inset-top))}
+}
+
+.demo-source { color: inherit; font-size: 13px; }

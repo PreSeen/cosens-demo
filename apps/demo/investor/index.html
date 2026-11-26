@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0C0D0E">
+<meta name="robots" content="noindex, nofollow">
+<meta name="cosens-default-locale" content="en">
+<link rel="icon" type="image/png" sizes="48x48" href="/favicon.png">
+<title data-i18n="investor.page_title">CoSens Investor Demo</title>
+</head>
+<body class="demo">
+<div id="root">
+<header id="shell"></header>
+<div class="runbar" id="runbar">
+  <div class="runbar-name"><span class="meta" data-i18n="runbar.current">Current demo</span><b id="runName">…</b><span class="tag blue" id="runSpace" title="This demo writes into a space you already had" data-i18n="runbar.existing_tag" data-i18n-title="runbar.existing_title" hidden>Existing space</span></div>
+  <div class="runbar-actions">
+    <button class="give" type="button" data-act="restart" title="Start a new demo. Earlier demos can be found under &quot;Switch&quot;." data-i18n-title="runbar.restart_title" data-i18n="runbar.restart">Start over</button>
+    <div class="menu-wrap">
+      <button class="give" type="button" data-act="switch" aria-haspopup="true" aria-expanded="false" aria-controls="runMenu" data-i18n="runbar.switch">Switch</button>
+      <div class="menu" id="runMenu" role="menu" aria-label="Earlier demos" data-i18n-aria-label="runbar.menu_label" hidden></div>
+    </div>
+    <button class="give" type="button" data-act="replay" title="Show the result of the latest real run of this demo" data-i18n-title="runbar.replay_title" data-i18n="act.replay">Last result</button>
+    <a class="give" href="/demo/assets/investor/demo-data.zip" download="CoSens-Investor-Demo-Materials.zip" data-i18n-download="runbar.download_name" data-i18n="runbar.download">Download demo materials</a>
+  </div>
+</div>
+<main>
+  <section class="hero" id="hero">
+    <div class="mark" id="mark" role="button" tabindex="0" title="Drag files here, or click to hand over the next one" aria-label="Hand the next group of demo materials to the AI" data-i18n-title="mark.title" data-i18n-aria-label="mark.label"><div class="crop"><img class="cs-wordmark-light" src="/assets/cosens-logo.png" alt=""><img class="cs-wordmark-dark" src="/assets/cosens-logo-on-dark.png" alt=""></div></div>
+    <p class="prompt" id="prompt" data-i18n="common.loading">Loading…</p>
+    <p class="sub" id="sub"></p>
+    <div class="steps" id="steps"><button type="button" data-step="1" data-i18n="steps.1">1 Remember materials</button><button type="button" data-step="2" data-i18n="steps.2">2 Learn the method</button><button type="button" data-step="3" data-i18n="steps.3">3 Analyze the BP</button></div>
+    <p class="hint" id="hint" role="status" aria-live="polite"></p>
+  </section>
+  <section class="mats" id="mats" aria-label="Demo materials" data-i18n-aria-label="mats.label"></section>
+  <section class="panel" id="panel" aria-live="polite"></section>
+</main>
+</div>
+<div id="ownInputs" hidden>
+  <input type="file" data-group="memory" multiple accept=".md,.markdown,.txt,.pdf,.doc,.docx" aria-label="Upload your own memory materials" data-i18n-aria-label="own.memory">
+  <input type="file" data-group="method" data-slot="A" data-role="bp" accept=".md,.markdown,.txt" aria-label="BP of project A" data-i18n-aria-label="own.a_bp">
+  <input type="file" data-group="method" data-slot="A" data-role="proposal" accept=".md,.markdown,.txt" aria-label="Investment recommendation of project A" data-i18n-aria-label="own.a_proposal">
+  <input type="file" data-group="method" data-slot="B" data-role="bp" accept=".md,.markdown,.txt" aria-label="BP of project B" data-i18n-aria-label="own.b_bp">
+  <input type="file" data-group="method" data-slot="B" data-role="proposal" accept=".md,.markdown,.txt" aria-label="Investment recommendation of project B" data-i18n-aria-label="own.b_proposal">
+  <input type="file" data-group="bp" accept=".md,.markdown,.txt" aria-label="Upload your own new BP" data-i18n-aria-label="own.bp">
+</div>
+<div class="viewer" id="viewer" hidden><div class="vbox" role="dialog" aria-modal="true" aria-labelledby="vtitle"><div class="vhead"><span id="vtitle"></span><button class="give" type="button" id="vclose" data-i18n="common.close">Close</button></div><div class="vbody" id="vbody"></div></div></div>
+<script type="module" src="/src/investor/main.ts"></script>
+</body>
+</html>
