@@ -109,6 +109,7 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   return (await res.json()) as T;
 }
 
+const RUN_POLL_TIMEOUT_MS = 90_000;
 const runPath = (id: string): string => `/investor/runs/${enc(id)}`;
 
 export type DemoFileBody = { group: GroupId; demoPath: string; slot?: Slot; role?: Role };
@@ -121,7 +122,8 @@ export const api = {
   listSpaces: () => request<SpaceList>('/investor/spaces'),
   // Without vuId the server creates a VU named in this zone, so the name matches the times the page shows; with vuId the run writes into that VU.
   createRun: (vuId?: string) => request<{ run: Run }>('/investor/runs', { method: 'POST', json: { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone, ...(vuId ? { vuId } : {}) } }).then(r => r.run),
-  getRun: (id: string) => request<RunReply>(runPath(id)),
+  // A status poll that never answers would stop the page refreshing until a reload, so it is abandoned and retried.
+  getRun: (id: string) => request<RunReply>(runPath(id), { signal: AbortSignal.timeout(RUN_POLL_TIMEOUT_MS) }),
   addDemoFile: (id: string, body: DemoFileBody) => request<{ run: Run }>(`${runPath(id)}/files`, { method: 'POST', json: body }).then(r => r.run),
   uploadFile: (id: string, file: File, fields: UploadFields) => {
     const form = new FormData();

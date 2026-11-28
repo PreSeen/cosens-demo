@@ -128,7 +128,9 @@ test('the Chinese system prompt is agent.py SYSTEM with only the story names gen
   .replace('BP 的出处写「锂境科技 BP」', 'BP 的出处写「星河储能 BP」')
   .replace('在周明远联系人或资料里', '在投资人的联系人或资料里')
   .replace('身份 · 和周明远的关系', '身份 · 和你的关系')
-  .replace('您 → … → 陈立', '你 → … → 创始人');
+  .replace('您 → … → 陈立', '你 → … → 创始人')
+  // Searches run over the materials, so they are written in the BP's language even when the page is not.
+  .replace('（不要堆砌关键词）', '（不要堆砌关键词），问句用 BP 原文的语言写（记忆按这个语言检索，与报告语言无关）');
  assert.equal(systemPrompt('星河储能 BP', 'zh'), expected);
  for (const name of ['周明远', '远川', '锂境', '陈立', '微信']) assert.equal(systemPrompt('星河储能 BP', 'zh').includes(name), false, name);
 });
@@ -149,7 +151,7 @@ test('tool, user, nudge and final prompts exist in both languages', () => {
   function: {
    name: 'memory_recall',
    description: 'Search the investor\'s memory. Returns the relevant source passages; every source begins with "Source: <title>".',
-   parameters: {type: 'object', properties: {query: {type: 'string', description: 'One specific search question'}}, required: ['query']},
+   parameters: {type: 'object', properties: {query: {type: 'string', description: 'One specific search question, in the language the BP is written in'}}, required: ['query']},
   },
  }]);
  assert.ok(Object.isFrozen(TOOLS[0].function.parameters));
@@ -158,7 +160,7 @@ test('tool, user, nudge and final prompts exist in both languages', () => {
   function: {
    name: 'memory_recall',
    description: '在投资人的记忆中检索。返回相关资料片段，每份资料以「资料：<标题>」开头。',
-   parameters: {type: 'object', properties: {query: {type: 'string', description: '一个具体的检索问题'}}, required: ['query']},
+   parameters: {type: 'object', properties: {query: {type: 'string', description: '一个具体的检索问题，用 BP 原文的语言'}}, required: ['query']},
   },
  }]);
  assert.equal(userPrompt({recipeText: 'R', bpTitle: 'T', bpText: 'B'}), '## Investment method (the Recipe RSI learned from the investor\'s past projects)\n\nR\n\n## New BP: T\n\nB');

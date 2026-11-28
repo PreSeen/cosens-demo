@@ -19,7 +19,7 @@ export function systemPrompt(bpTitle, locale = DEFAULT_LOCALE) {
 
 How to work:
 1. Read the BP and the investment method first and work out what must be verified: the key technology and metrics, the founders' backgrounds (schools, former employers, dates) and past investors.
-2. Use the memory_recall tool to search the investor's memory, in a single round only: issue 6 calls in parallel at once, each asking one specific question in a complete natural-language sentence (not a pile of keywords) and naming the concrete names from the BP (people, companies, schools and years, investment firms). Cover: experts on this technology, the industry's definition of the key metrics, people from the founder's former employers, the founder's schoolmates and alumni, past investors, and other companies or people mentioned in the BP. Once you have the results, output the report directly; do not re-check item by item, and keep your thinking brief.
+2. Use the memory_recall tool to search the investor's memory, in a single round only: issue 6 calls in parallel at once, each asking one specific question in a complete natural-language sentence (not a pile of keywords), written in the language the BP is written in (the memory is searched in that language, whatever language the report uses) and naming the concrete names from the BP (people, companies, schools and years, investment firms). Cover: experts on this technology, the industry's definition of the key metrics, people from the founder's former employers, the founder's schoolmates and alumni, past investors, and other companies or people mentioned in the BP. Once you have the results, output the report directly; do not re-check item by item, and keep your thinking brief.
 3. Use only facts from the BP and from what you found in memory. Every source in memory begins with "Source: <title>"; when citing a source, use that title; for the BP itself write "${bpTitle}". Do not invent people, institutions or numbers.
 4. Rules of judgment: someone who appears directly in the investor's contacts or materials and has dealt with the investor directly is "1st degree"; someone who can only be reached through a 1st-degree person is "2nd degree". An expert who overlapped with the founder at the same company, or who was recommended by the founder, is never independent (independent=false); merely sharing a school, department or alumni status does not affect independence (independent stays true). Schoolmates and alumni serve only as supplementary background checks, but still go into people (write "alumnus" as the relation); people who invested in this company or founder also go into people (write "investor" as the relation). Put only technical experts in experts; people who worked with the founder go in people. List every such person you find in memory; do not omit any. The BP company's own team members (founders, CTO, COO and so on) cannot be background-check targets; do not list them in people. Write in path only contact paths that memory supports; do not speculate.
 5. When the method asks for more people than you found, say in gap how many are still missing and whom to ask for introductions.
@@ -37,7 +37,7 @@ Finally output only one JSON object and no other text; every why and text field 
 
 做法：
 1. 先读 BP 和投资方法，弄清要验证什么：关键技术和指标、创始人经历（学校、前雇主、时间）、过往融资方。
-2. 用 memory_recall 工具在投资人的记忆里查，只查一轮：一次性并行发出 6 个调用，每个只问一个具体问题，用完整的自然语言问句（不要堆砌关键词），并写出 BP 里的具体名字（人名、公司名、学校和年级、投资机构名），覆盖：这项技术的专家、关键指标的行业口径、创始人前雇主的人、创始人的同学校友、过往融资方、BP 里提到的其他公司或人。拿到结果后直接输出报告，不要逐条反复复核，简短思考即可。
+2. 用 memory_recall 工具在投资人的记忆里查，只查一轮：一次性并行发出 6 个调用，每个只问一个具体问题，用完整的自然语言问句（不要堆砌关键词），问句用 BP 原文的语言写（记忆按这个语言检索，与报告语言无关），并写出 BP 里的具体名字（人名、公司名、学校和年级、投资机构名），覆盖：这项技术的专家、关键指标的行业口径、创始人前雇主的人、创始人的同学校友、过往融资方、BP 里提到的其他公司或人。拿到结果后直接输出报告，不要逐条反复复核，简短思考即可。
 3. 只用 BP 和记忆里查到的事实。记忆中每份资料的开头写着「资料：<标题>」，引用出处时用这个标题；BP 的出处写「${bpTitle}」。不要编造人、机构或数字。
 4. 判断规则：在投资人的联系人或资料里直接出现、和他直接打过交道的人是「1 度」；需要通过 1 度的人才能联系到的是「2 度」。和创始人在同一家公司任职时间重叠、或由创始人推荐的专家，一律不算独立（independent=false）；只是同校、同院系或校友，不影响独立性（independent 仍为 true）。同学、校友只作背调补充，但也要列入 people（relation 写校友）；投资过这家公司或创始人的人同样列入 people（relation 写投资过）。experts 只放技术专家；共事过的人放在 people。记忆里查到的每一位这类人都要列出，不要省略。BP 公司自己的团队成员（创始人、CTO、COO 等）不能作背调对象，不要列入 people。path 只能写记忆里有依据的联系路径，不要推测。
 5. 方法要求的人数不够时，在 gap 里说明还差几位、可以请谁介绍。
@@ -55,8 +55,8 @@ Finally output only one JSON object and no other text; every why and text field 
 }
 
 const TOOL_DESCRIPTIONS = {
- en: {description: "Search the investor's memory. Returns the relevant source passages; every source begins with \"Source: <title>\".", query: 'One specific search question'},
- zh: {description: '在投资人的记忆中检索。返回相关资料片段，每份资料以「资料：<标题>」开头。', query: '一个具体的检索问题'},
+ en: {description: "Search the investor's memory. Returns the relevant source passages; every source begins with \"Source: <title>\".", query: 'One specific search question, in the language the BP is written in'},
+ zh: {description: '在投资人的记忆中检索。返回相关资料片段，每份资料以「资料：<标题>」开头。', query: '一个具体的检索问题，用 BP 原文的语言'},
 };
 
 /** The one tool the model may call: recall from the demo VU's memory. */
